@@ -9,7 +9,7 @@ from .models import Employee
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     """
-    API endpoint que permite que a empresa seja vista ou editada
+    API endpoint que permite que o funcionário seja vista ou editada
     """
 
     queryset = Employee.objects.all().order_by('-created_at')

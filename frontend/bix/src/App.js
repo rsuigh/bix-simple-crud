@@ -5,7 +5,8 @@ import { AuthProvider } from './context/AuthContext'
 
 import HomePage from './Pages/Home/HomePage'
 import LoginPage from './Pages/Login/Login'
-import Header from './Components/Header'
+import Header from './Components/Header/Header'
+import Dashboard from './Pages/Dashboard/Dashboard'
 
 import PrivateRoute from './utils/PrivateRoute'
 
@@ -16,11 +17,15 @@ function App() {
               <AuthProvider>
                 <Header/>
                 <Routes>
+                    <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/" element={
                     <PrivateRoute>
                       <HomePage/>
                     </PrivateRoute>} />
-                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/d" element={
+                    <PrivateRoute>
+                      <Dashboard/>
+                    </PrivateRoute>} />
                 </Routes>
                 </AuthProvider>
             </Router>

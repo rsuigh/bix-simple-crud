@@ -1,0 +1,33 @@
+
+.modal-form {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.modal-group {
+  margin-bottom: 15px;
+}
+
+.modal-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.modal-group button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}

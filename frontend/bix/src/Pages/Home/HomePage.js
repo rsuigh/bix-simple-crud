@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
 import AuthContext from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
+import './HomePage.css';
 
 
 
 const HomePage = () => {
     const { authTokens, logoutUser } = useContext(AuthContext);
     let [user, setUser] = useState([])
+    let [employees, setEmployees] = useState([])
+    let [companies, setCompanies] = useState([])
+
 
     useEffect(() => {
         getUser()
@@ -27,15 +32,18 @@ const HomePage = () => {
         }
     }
 
+
     return (
-        <div>
-            <p>You are logged in to the homepage!</p>
+        <div className='home-container'>
+            <p>Você está na Home Page!</p>
             <p>Name: {user.username}</p>
+            
             {user.is_superuser ? (
                 <p>é admin</p>
             ) : (
                 <p>não é admin</p>
             )}
+            <p>Ir para o <Link to='/d'>Dashboard</Link></p>
             
         </div>
     )
