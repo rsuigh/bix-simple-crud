@@ -1,19 +1,31 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Routes, Route as RouteElement } from 'react-router';
-import './App.css';
-import Login from './Pages/Login';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+
+import { AuthProvider } from './context/AuthContext'
 
 
-const App = () => {
-  return (
-    <Router>
-      <Routes>
-        <RouteElement  path="/" element={<Login />} />
-        {/* Outras rotas */}
-      </Routes>
-    </Router>
-  );
-};
+import HomePage from './Pages/Home/HomePage'
+import LoginPage from './Pages/Login/Login'
+import Header from './Components/Header'
+
+import PrivateRoute from './utils/PrivateRoute'
+
+function App() {
+    return (
+        <div className="App">
+            <Router>
+              <AuthProvider>
+                <Header/>
+                <Routes>
+                    <Route path="/" element={
+                    <PrivateRoute>
+                      <HomePage/>
+                    </PrivateRoute>} />
+                    <Route path="/login" element={<LoginPage/>}/>
+                </Routes>
+                </AuthProvider>
+            </Router>
+        </div>
+    );
+}
 
 export default App;
