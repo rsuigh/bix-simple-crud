@@ -1,47 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './AddEmployeeModal.css'
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 
 
-const AddEmployeeModal = ({ isOpen, onRequestClose, authTokens}) => {
+const AddEmployeeModal = ({ isOpen, onRequestClose, authTokens, items}) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [gender, setGender] = useState('');
   const [entryDate, setEntryDate] = useState('');
+  const [leaveDate, setLeaveDate] = useState('');
+  const [vacationStart, setVacationStart] = useState('');
+  const [vacationEnd, setVacationEnd] = useState('');
+
+
+  useEffect(() => {
+    if (items) {
+      setName(items.name)
+      setAddress(items.address)
+      setBirthdate(items.birthdate)
+      setGender(items.gender)
+      setEntryDate(items.entry_date)
+      setLeaveDate(items.leave_date)
+      setVacationStart(items.vacation_date_start)
+      setVacationEnd(items.vacation_date_end)
+    }
+  }, [items])
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      let response = await fetch('http://127.0.0.1:85/employees/', {
-        method: 'POST',
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer ' + String(authTokens)
-        },
-        body: JSON.stringify({
-            name: name, 
-            address: address, 
-            birthdate: birthdate, 
-            gender: gender,
-            entryDate: entryDate,
-        })
-      });
-      if (response.ok) {
-        console.log('Formulário enviado com sucesso!');
-        // Feche o modal após o envio bem-sucedido do formulário
-        onRequestClose();
-      } else {
-        console.error('Erro ao enviar o formulário');
+    if(items) {
+      try {
+        let response = await fetch('http://127.0.0.1:85/employees/' + items.id + '/', {
+          method: 'PUT',
+          headers:{
+              'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + String(authTokens)
+          },
+          body: JSON.stringify({
+              name: name, 
+              address: address, 
+              birthdate: birthdate, 
+              gender: gender,
+              entryDate: entryDate,
+              leaveDate:leaveDate,
+              vacationStart:vacationStart,
+              vacationEnd:vacationEnd,
+          })
+        });
+        if (response.ok) {
+          console.log('Formulário enviado com sucesso!');
+          // Feche o modal após o envio bem-sucedido do formulário
+          onRequestClose();
+        } else {
+          console.error('Erro ao enviar o formulário');
+        }
+      
+      }     
+      catch (error) {
+        console.error('Erro na solicitação:', error);
       }
-    
-    }     
-    catch (error) {
-      console.error('Erro na solicitação:', error);
-    }
+
+    } else {    
+        try {
+          let response = await fetch('http://127.0.0.1:85/employees/', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer ' + String(authTokens)
+            },
+            body: JSON.stringify({
+                name: name, 
+                address: address, 
+                birthdate: birthdate, 
+                gender: gender,
+                entryDate: entryDate,
+            })
+          });
+          if (response.ok) {
+            console.log('Formulário enviado com sucesso!');
+            // Feche o modal após o envio bem-sucedido do formulário
+            onRequestClose();
+          } else {
+            console.error('Erro ao enviar o formulário');
+          }
+        
+        }     
+        catch (error) {
+          console.error('Erro na solicitação:', error);
+        }
+  }
 
   };
 
@@ -112,8 +163,47 @@ const AddEmployeeModal = ({ isOpen, onRequestClose, authTokens}) => {
             />
           </label>
         </div>
-        <br />
-        <button type="submit">Enviar</button>
+        { items ? (
+          <div>
+            <div className='modal-group'>
+              <label>
+                Funcionário até:
+                <input
+                  type="text"
+                  value={leaveDate}
+                  placeholder='yyyy-mm-dd'
+                  onChange={(e) => setLeaveDate(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='modal-group'>
+              <label>
+                Início das férias:
+                <input
+                  type="text"
+                  value={vacationStart}
+                  placeholder='yyyy-mm-dd'
+                  onChange={(e) => setVacationStart(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className='modal-group'>
+              <label>
+                Final das férias:
+                <input
+                  type="text"
+                  value={vacationEnd}
+                  placeholder='yyyy-mm-dd'
+                  onChange={(e) => setVacationEnd(e.target.value)}
+                />
+              </label>
+            </div>
+            <button type="submit">Atualizar</button>
+          </div>
+        ) 
+        : 
+        (<button type="submit">Enviar</button>)}
+        
       </form>
     </Modal>
   );

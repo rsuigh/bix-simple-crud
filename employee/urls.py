@@ -1,15 +1,17 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from . import views
+from .views import EmployeeViewSet, DeleteEmployeeView
 
 app_name = 'employee'
 router = routers.DefaultRouter()
-router.register(r'', views.EmployeeViewSet, basename='employee')
+router.register(r'', EmployeeViewSet, basename='employee')
 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path(r'delete/<int:pk>/', DeleteEmployeeView.as_view(), name='delete')
+
 ]
 
 urlpatterns += router.urls

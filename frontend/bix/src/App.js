@@ -7,10 +7,12 @@ import HomePage from './Pages/Home/HomePage'
 import LoginPage from './Pages/Login/Login'
 import Header from './Components/Header/Header'
 import Dashboard from './Pages/Dashboard/Dashboard'
+import Modal from 'react-modal';
 
 import PrivateRoute from './utils/PrivateRoute'
 
 function App() {
+  Modal.setAppElement('#root');
     return (
         <div className="App">
             <Router>

@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from .serializers import EmployeeSerializer
 from bix_simple_crud.permissions import ReadOnlyOrAdminPermission
+from rest_framework.generics import DestroyAPIView
+
 
 from .models import Employee
 
@@ -15,3 +16,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all().order_by('-created_at')
     serializer_class = EmployeeSerializer
     permission_classes = [ReadOnlyOrAdminPermission]
+
+
+class DeleteEmployeeView(DestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer

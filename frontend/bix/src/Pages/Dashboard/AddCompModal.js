@@ -1,36 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './AppCompModal.css'
 
-const AddCompModal = ({ isOpen, onRequestClose, authTokens}) => {
+
+const AddCompModal = ({ isOpen, onRequestClose, authTokens ,items}) => {
   const [compname, setCompName] = useState('');
   const [address, setAddress] = useState('');
+
+useEffect(() => {
+  if (items) {
+    setCompName(items.name)
+    setAddress(items.address)
+  }
+}, [items])
+ 
+  
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      let response = await fetch('http://127.0.0.1:85/companies/', {
-        method: 'POST',
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer ' + String(authTokens)
-        },
-        body: JSON.stringify({name: compname, address: address})
-      });
-      if (response.ok) {
-        console.log('Formulário enviado com sucesso!');
-        // Feche o modal após o envio bem-sucedido do formulário
-        onRequestClose();
-      } else {
-        console.error('Erro ao enviar o formulário');
+    if (items) {
+      try {
+        let response = await fetch('http://127.0.0.1:85/companies/'+ items.id + '/', {
+          method: 'PUT',
+          headers:{
+              'Content-Type': 'application/json',
+              'Authorization':'Bearer ' + String(authTokens)
+          },
+          body: JSON.stringify({name: compname, address: address})
+        });
+        if (response.ok) {
+          console.log('Formulário enviado com sucesso!');
+          // Feche o modal após o envio bem-sucedido do formulário
+          onRequestClose();
+        } else {
+          console.error('Erro ao enviar o formulário');
+        }
+      
+      }     
+      catch (error) {
+        console.error('Erro na solicitação:', error);
       }
-    
-    }     
-    catch (error) {
-      console.error('Erro na solicitação:', error);
-    }
+    } else {
+        try {
+          let response = await fetch('http://127.0.0.1:85/companies/', {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization':'Bearer ' + String(authTokens)
+            },
+            body: JSON.stringify({name: compname, address: address})
+          });
+          if (response.ok) {
+            console.log('Formulário enviado com sucesso!');
+            // Feche o modal após o envio bem-sucedido do formulário
+            onRequestClose();
+          } else {
+            console.error('Erro ao enviar o formulário');
+          }
+        
+        }     
+        catch (error) {
+          console.error('Erro na solicitação:', error);
+        }
+  }
 
   };
 
@@ -38,7 +72,11 @@ const AddCompModal = ({ isOpen, onRequestClose, authTokens}) => {
     <Modal
       className='modal-container'
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={() => {
+        setCompName('')
+        setAddress('')
+        onRequestClose()}
+      }
       contentLabel="Formulário Modal"
     >
       <h2>Preencha o formulário</h2>
@@ -64,8 +102,8 @@ const AddCompModal = ({ isOpen, onRequestClose, authTokens}) => {
             />
           </label>
         </div>
-        <br />
-        <button type="submit">Enviar</button>
+        {items ? (<button type="submit">Atualizar</button>):(<button type="submit">Enviar</button>)}
+        
       </form>
     </Modal>
   );
