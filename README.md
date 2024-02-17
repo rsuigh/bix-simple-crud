@@ -1,4 +1,4 @@
-# E-Seating Backend
+# Bix-simple-crud Backend
 
 Repositório do backend da ferramenta desenvolvida para o Easy Seating
 
